@@ -16,7 +16,7 @@ const ChatScreen = ({route}) => {
   const [messages, setMessages] = React.useState([]);
   const navigation = useNavigation();
   const {data, id} = route.params;
-  console.log('routeData', data, id);
+  // console.log('routeData', data, id);
 
   useEffect(() => {
     const subscriber = firestore()
@@ -61,7 +61,6 @@ const ChatScreen = ({route}) => {
       .add(mymsg);
   }, []);
 
-  console.log("lats message",messages[0]);
 
   return (
     <View style={styles.container}>

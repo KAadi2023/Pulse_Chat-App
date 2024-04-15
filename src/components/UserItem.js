@@ -96,6 +96,7 @@ const styles = StyleSheet.create({
   latestMessageTime: {
     fontSize: 12,
     color: 'gray',
-    alignSelf: 'flex-start', // Adjust alignment as needed
+    alignSelf: 'flex-start',
+    marginRight: 20 // Adjust alignment as needed
   },
 });

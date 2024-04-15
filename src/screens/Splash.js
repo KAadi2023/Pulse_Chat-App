@@ -28,7 +28,7 @@ const Splash = () => {
     try {
       const id = await AsyncStorage.getItem('userId');
       if (id !== null) {
-        navigation.navigate('Home');
+        navigation.replace('Home');
       } else {
         navigation.navigate('Login');
       }

@@ -3,6 +3,7 @@ import { Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'reac
 import { useNavigation } from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
 import uuid from 'react-native-uuid';
+import auth from '@react-native-firebase/auth';
 
 const Signup = () => {
   const navigation = useNavigation();
@@ -42,23 +43,54 @@ const Signup = () => {
     }
   };
 
-  const registerUser = () => {
-    firestore()
-      .collection('users')
-      .doc(userId)
-      .set({
-        name: payload.name,
-        email: payload.email,
-        mobile: payload.mobile,
-        password: payload.password,
-        userId: userId,
-      })
-      .then(() => {
-        navigation.navigate('Login');
-      })
-      .catch(error => {
-        console.log(error);
+  // const registerUser = () => {
+  //   firestore()
+  //     .collection('users')
+  //     .doc(userId)
+  //     .set({
+  //       name: payload.name,
+  //       email: payload.email,
+  //       mobile: payload.mobile,
+  //       password: payload.password,
+  //       userId: userId,
+  //     })
+  //     .then(() => {
+  //       navigation.navigate('Login');
+  //     })
+  //     .catch(error => {
+  //       console.log(error);
+  //     });
+  // };
+
+  const registerUser = async () => {
+    try {
+      const { name, email, password, mobile } = payload;
+      const userCredential = await auth().createUserWithEmailAndPassword(email, password);
+
+      // Set display name for the user
+      await userCredential.user.updateProfile({
+        displayName: name,
+        phoneNumber: mobile,
+        photoURL: ''
       });
+
+      // If user creation is successful, store additional user information in Firestore
+      const userId = userCredential.user.uid;
+      await firestore().collection('users').doc(userId).set({
+        name: name,
+        email: email,
+        mobile: mobile,
+        password: password,
+        userId: userId,
+      });
+
+      // If user creation is successful, navigate to the login screen
+      navigation.navigate('Login');
+    } catch (error) {
+      console.error('Error creating user:', error);
+      // Display an alert or handle the error appropriately
+      Alert.alert('Error', 'Failed to create user account. Please try again.');
+    }
   };
 
   const handleLoginClick = () => {

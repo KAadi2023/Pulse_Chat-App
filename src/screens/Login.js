@@ -6,11 +6,12 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
-import {useNavigation} from '@react-navigation/native';
+import React, { useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
 import Loader from '../components/Loader';
 import AsyncStorage from '@react-native-community/async-storage'
+import auth from '@react-native-firebase/auth';
 
 const Login = () => {
   const [visible, setVisible] = useState(false);
@@ -33,44 +34,42 @@ const Login = () => {
     navigation.navigate('Signup');
   };
 
-  const loginUser = () => {
+  const loginUser = async () => {
     setVisible(true);
-    firestore()
-      .collection('users')
-      .where('email', '==', payload.email)
-      .get()
-      .then(res => {
-        setVisible(false);
-        console.log('response: ', res.docs[0].data());
-        const data = res.docs[0].data();
-        goToNext(data.name, data.email, data.userId);
-        // Alert.alert('User Found.');
-      })
-      .catch(error => {
-        setVisible(false);
-        console.log(error);
-      });
+    try {
+      const { email, password } = payload;
+      const response = await auth().signInWithEmailAndPassword(email, password);
+      setVisible(false);
+      console.log('User logged in:', response.user);
+      const data = response.user;
+      goToNext(data.displayName, data.email, data.uid)
+    } catch (error) {
+      setVisible(false);
+      console.log('Error logging in:', error);
+      // Display an alert or handle the error appropriately
+      Alert.alert('Error', 'Invalid email or password. Please try again.');
+    }
   };
 
   const goToNext = async (name, email, userId) => {
     await AsyncStorage.setItem('name', name);
     await AsyncStorage.setItem('email', email);
     await AsyncStorage.setItem('userId', userId);
-    navigation.navigate('Home');
+    navigation.replace('Home');
   };
 
   return (
     <View style={styles.Container}>
       <Text style={styles.Title}>Sign in</Text>
       <TextInput
-        style={[styles.TextInput, {marginTop: 50}]}
+        style={[styles.TextInput, { marginTop: 50 }]}
         id="email"
         placeholder="Enter email"
         placeholderTextColor={'black'}
         onChangeText={value => handleInputChange(value, 'email')}
       />
       <TextInput
-        style={[styles.TextInput, {marginTop: 20}]}
+        style={[styles.TextInput, { marginTop: 20 }]}
         placeholder="Enter password"
         placeholderTextColor={'black'}
         id="password"
