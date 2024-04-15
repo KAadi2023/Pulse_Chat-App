@@ -74,7 +74,18 @@ const Users = () => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerText}>Pulse Chat</Text>
+        <View style={{
+          height: 60,
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+          <Image
+            source={require('../image/logo.png')}
+            style={styles.logoImage}
+          />
+          <Text style={styles.headerText}>Pulse Chat</Text>
+        </View>
         <TouchableOpacity onPress={handleLogout}>
           <Image
             source={require('../image/logout.png')}
@@ -113,12 +124,18 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5FCFF',
     elevation: 5,
   },
+  logoImage: {
+    width: 60,
+    height: 60,
+    alignSelf: 'center',
+    marginLeft: 15
+  },
   headerText: {
     fontSize: 22,
     fontWeight: 'bold',
     color: 'blue',
     alignSelf: 'center',
-    marginLeft: 20
+    marginLeft: 10
   },
   userItem: {
     width: '100%',

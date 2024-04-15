@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
 import uuid from 'react-native-uuid';
 import auth from '@react-native-firebase/auth';
+import {} from 'react-native-i'
 
 const Signup = () => {
   const navigation = useNavigation();
@@ -42,25 +43,6 @@ const Signup = () => {
       setBorderColors({ ...borderColors, [name]: 'green' });
     }
   };
-
-  // const registerUser = () => {
-  //   firestore()
-  //     .collection('users')
-  //     .doc(userId)
-  //     .set({
-  //       name: payload.name,
-  //       email: payload.email,
-  //       mobile: payload.mobile,
-  //       password: payload.password,
-  //       userId: userId,
-  //     })
-  //     .then(() => {
-  //       navigation.navigate('Login');
-  //     })
-  //     .catch(error => {
-  //       console.log(error);
-  //     });
-  // };
 
   const registerUser = async () => {
     try {

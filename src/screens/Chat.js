@@ -16,7 +16,6 @@ const ChatScreen = ({route}) => {
   const [messages, setMessages] = React.useState([]);
   const navigation = useNavigation();
   const {data, id} = route.params;
-  // console.log('routeData', data, id);
 
   useEffect(() => {
     const subscriber = firestore()
