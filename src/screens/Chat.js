@@ -7,17 +7,31 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { GiftedChat, Send } from 'react-native-gifted-chat';
 import firestore from '@react-native-firebase/firestore';
+import AsyncStorage from '@react-native-community/async-storage';
+import auth from '@react-native-firebase/auth';
 
 const ChatScreen = ({ route }) => {
   const [messages, setMessages] = React.useState([]);
   const navigation = useNavigation();
   const { data, id } = route.params;
+  const [senderPic, setSenderPic] = useState('')
 
   console.log("chat data:", data)
+  console.log("sendersPic:", senderPic)
+
+  useEffect(() => {
+    getCurrentUsers();
+  }, []);
+
+
+  const getCurrentUsers = async () => {
+    const currentUser = auth().currentUser;
+    setSenderPic(currentUser.photoURL)
+  };
 
   useEffect(() => {
     const subscriber = firestore()
@@ -84,7 +98,7 @@ const ChatScreen = ({ route }) => {
         </View>
         <View style={styles.RightHeaderContainer}>
           <TouchableOpacity
-            // onPress={() => navigation.navigate("CallPage", { data: data, id: id })}
+          // onPress={() => navigation.navigate("CallPage", { data: data, id: id })}
           >
             <Image
               source={require('../image/call.png')}
@@ -104,7 +118,7 @@ const ChatScreen = ({ route }) => {
         onSend={messages => onSend(messages)}
         user={{
           _id: id,
-          avatar: require('../image/user.png'),
+          avatar: senderPic ? senderPic : require('../image/user.png'),
         }}
         textInputProps={{
           style: {
