@@ -7,15 +7,17 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useCallback, useEffect} from 'react';
-import {useNavigation} from '@react-navigation/native';
-import {GiftedChat, Send} from 'react-native-gifted-chat';
+import React, { useCallback, useEffect } from 'react';
+import { useNavigation } from '@react-navigation/native';
+import { GiftedChat, Send } from 'react-native-gifted-chat';
 import firestore from '@react-native-firebase/firestore';
 
-const ChatScreen = ({route}) => {
+const ChatScreen = ({ route }) => {
   const [messages, setMessages] = React.useState([]);
   const navigation = useNavigation();
-  const {data, id} = route.params;
+  const { data, id } = route.params;
+
+  console.log("chat data:", data)
 
   useEffect(() => {
     const subscriber = firestore()
@@ -74,15 +76,16 @@ const ChatScreen = ({route}) => {
             />
           </TouchableOpacity>
           <View style={styles.userDetails}>
-            <Image
-              source={require('../image/user.png')}
-              style={styles.profilePic}
-            />
+            <Image style={styles.profilePic} source={{
+              uri: data?.profilePic,
+            }} />
             <Text style={styles.headerText}>{data.name}</Text>
           </View>
         </View>
         <View style={styles.RightHeaderContainer}>
-          <TouchableOpacity>
+          <TouchableOpacity
+            // onPress={() => navigation.navigate("CallPage", { data: data, id: id })}
+          >
             <Image
               source={require('../image/call.png')}
               style={styles.CallIcon}
@@ -119,7 +122,8 @@ export default ChatScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5FCFF',
+    backgroundColor: '#f9fafb',
+    color: 'white'
   },
   header: {
     width: '100%',

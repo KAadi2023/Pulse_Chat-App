@@ -12,7 +12,7 @@ let id = '';
 const Users = () => {
   const navigation = useNavigation();
   const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     getUsers();
   }, []);
@@ -20,6 +20,7 @@ const Users = () => {
   console.log('users', users);
 
   const getUsers = async () => {
+    setLoading(true);
     try {
       id = await AsyncStorage.getItem('userId');
       let tempData = [];
@@ -45,6 +46,7 @@ const Users = () => {
   };
 
   const handleLogout = async () => {
+    // setLoading(true);
     try {
       const currentUser = auth().currentUser;
       console.log("currentUser: ", currentUser)
@@ -52,7 +54,8 @@ const Users = () => {
         await auth().signOut(); // Sign out the user
         // You can navigate to a login screen or clear AsyncStorage data here
         // For example:
-        // await AsyncStorage.clear();
+        await AsyncStorage.clear();
+        setLoading(false)
         navigation.navigate('Login');
       } else {
         console.log('No user is currently signed in.');
@@ -113,7 +116,7 @@ export default Users;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5FCFF',
+    backgroundColor: '#f9fafb',
   },
   header: {
     width: '100%',

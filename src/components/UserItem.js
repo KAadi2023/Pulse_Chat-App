@@ -27,7 +27,7 @@ const UserItem = ({ data, id }) => {
   function formatTimestamp(timestamp) {
     const messageDate = new Date(timestamp);
     const currentDate = new Date();
-  
+
     // Check if the message was sent today
     if (messageDate.toDateString() === currentDate.toDateString()) {
       // Display time if it was sent today
@@ -37,10 +37,12 @@ const UserItem = ({ data, id }) => {
       return messageDate.toLocaleDateString([], { month: 'short', day: 'numeric' });
     }
   }
-  
+
 
   const latestMessageText = message.length > 0 ? message[0].text : '';
   const latestMessageTime = message.length > 0 ? formatTimestamp(message[0].createdAt) : '';
+
+  console.log("users data:", data)
 
   return (
     <TouchableOpacity
@@ -49,7 +51,9 @@ const UserItem = ({ data, id }) => {
     >
       <View style={styles.content}>
         <View style={styles.userInfo}>
-          <Image style={styles.image} source={require('../image/user.png')} />
+          <Image style={styles.image} source={{
+            uri: data?.profilePic,
+          }} />
           <View>
             <Text style={styles.name}>{data?.name}</Text>
             <Text style={styles.latestMessage}>{latestMessageText}</Text>
@@ -80,8 +84,9 @@ const styles = StyleSheet.create({
   image: {
     width: 40,
     height: 40,
-    resizeMode: 'contain',
-    marginRight: 12,
+    borderRadius: 20,
+    alignSelf: 'center',
+    marginRight: 20,
   },
   name: {
     marginBottom: 4,

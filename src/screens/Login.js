@@ -73,6 +73,7 @@ const Login = () => {
         placeholder="Enter password"
         placeholderTextColor={'black'}
         id="password"
+        secureTextEntry={true}
         onChangeText={value => handleInputChange(value, 'password')}
       />
       <TouchableOpacity style={styles.SignUpBtn} onPress={() => loginUser()}>
