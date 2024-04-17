@@ -77,7 +77,9 @@ const UserItem = ({ data, id }) => {
             <Image style={styles.ModalImage} source={{
               uri: data?.profilePic,
             }} />
-            <TouchableOpacity onPress={() => setIsVisible(false)}>
+            <TouchableOpacity
+              style={[styles.button, styles.buttonClose]}
+              onPress={() => setIsVisible(false)}>
               <Text>Close</Text>
             </TouchableOpacity>
           </View>
@@ -144,5 +146,13 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     alignSelf: 'center',
     marginBottom: 20,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonClose: {
+    backgroundColor: '#2196F3',
   },
 });

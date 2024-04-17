@@ -9,8 +9,8 @@ const UserProfile = () => {
   const [additionaldetails, setAdditionalDetails] = useState({});
   const [loading, setLoading] = useState(false);
 
-  console.log("currentUser", currentUser);
-  console.log("additionalDetails", additionaldetails);
+  // console.log("currentUser", currentUser);
+  // console.log("additionalDetails", additionaldetails);
 
   useEffect(() => {
     getCurrentUser();

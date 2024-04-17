@@ -35,6 +35,7 @@ const Users = () => {
             res.docs.forEach(doc => {
               tempData.push(doc.data());
             });
+            // console.log("TempData", tempData)
             setUsers(tempData);
             setLoading(false);
           }

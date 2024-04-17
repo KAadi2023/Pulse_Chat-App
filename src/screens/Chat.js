@@ -152,12 +152,14 @@ const ChatScreen = ({ route }) => {
                 <Text style={styles.MobileNumberValue}>{data?.mobile}</Text>
               </Text>
             </View>
-            <TouchableOpacity onPress={() => setIsVisible(false)}>
-              <Text style={{fontSize: 16 }}>Close</Text>
+            <TouchableOpacity
+              style={[styles.button, styles.buttonClose]}
+              onPress={() => setIsVisible(false)}>
+              <Text style={{ fontSize: 16 }}>Close</Text>
             </TouchableOpacity>
           </View>
         </View>
-      </Modal> 
+      </Modal>
     </View>
   );
 };
@@ -255,7 +257,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   popover: {
-    backgroundColor: '#ccfbf1', 
+    backgroundColor: '#ccfbf1',
     padding: 10,
     borderRadius: 20,
     alignItems: 'center',
@@ -271,7 +273,7 @@ const styles = StyleSheet.create({
     width: '80%',
     height: 'auto',
     backgroundColor: '#d1d5db',
-    marginBottom: 10, 
+    marginBottom: 10,
     borderRadius: 10,
     shadowColor: '#000',
     shadowOffset: {
@@ -306,5 +308,13 @@ const styles = StyleSheet.create({
   MobileNumberValue: {
     fontSize: 15,
     fontWeight: 'normal',
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonClose: {
+    backgroundColor: '#2196F3',
   },
 });
