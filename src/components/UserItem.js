@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
@@ -6,6 +6,7 @@ import firestore from '@react-native-firebase/firestore';
 const UserItem = ({ data, id }) => {
   const navigation = useNavigation();
   const [message, setMessages] = useState([]);
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     const subscriber = firestore()
@@ -42,7 +43,7 @@ const UserItem = ({ data, id }) => {
   const latestMessageText = message.length > 0 ? message[0].text : '';
   const latestMessageTime = message.length > 0 ? formatTimestamp(message[0].createdAt) : '';
 
-  console.log("users data:", data)
+  // console.log("users data:", data)
 
   return (
     <TouchableOpacity
@@ -51,9 +52,13 @@ const UserItem = ({ data, id }) => {
     >
       <View style={styles.content}>
         <View style={styles.userInfo}>
-          <Image style={styles.image} source={{
-            uri: data?.profilePic,
-          }} />
+          <TouchableOpacity
+            onPress={() => setIsVisible(true)}
+          >
+            <Image style={styles.image} source={{
+              uri: data?.profilePic,
+            }} />
+          </TouchableOpacity>
           <View>
             <Text style={styles.name}>{data?.name}</Text>
             <Text style={styles.latestMessage}>{latestMessageText}</Text>
@@ -61,6 +66,23 @@ const UserItem = ({ data, id }) => {
         </View>
         <Text style={styles.latestMessageTime}>{latestMessageTime}</Text>
       </View>
+      <Modal
+        visible={isVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setIsVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.popover}>
+            <Image style={styles.ModalImage} source={{
+              uri: data?.profilePic,
+            }} />
+            <TouchableOpacity onPress={() => setIsVisible(false)}>
+              <Text>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </TouchableOpacity>
   );
 };
@@ -103,5 +125,24 @@ const styles = StyleSheet.create({
     color: 'gray',
     alignSelf: 'flex-start',
     marginRight: 20 // Adjust alignment as needed
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  popover: {
+    backgroundColor: '#99f6e4',
+    padding: 10,
+    borderRadius: 20,
+    alignItems: 'center',
+  },
+  ModalImage: {
+    width: 300,
+    height: 300,
+    borderRadius: 20,
+    alignSelf: 'center',
+    marginBottom: 20,
   },
 });

@@ -1,4 +1,4 @@
-import {ActivityIndicator, FlatList, Image, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, FlatList, Image, StyleSheet, Text, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import firestore from '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -17,7 +17,7 @@ const Users = () => {
     getUsers();
   }, []);
 
-  console.log('users', users);
+  // console.log('users', users);
 
   const getUsers = async () => {
     setLoading(true);
@@ -89,7 +89,9 @@ const Users = () => {
           />
           <Text style={styles.headerText}>Pulse Chat</Text>
         </View>
-        <TouchableOpacity onPress={handleLogout}>
+        <TouchableOpacity
+          onPress={handleLogout}
+        >
           <Image
             source={require('../image/logout.png')}
             style={styles.logoutImage}

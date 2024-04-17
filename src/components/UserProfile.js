@@ -82,10 +82,13 @@ const UserProfile = () => {
       </View>
       <View style={styles.ProfiledetailsContainer}>
         <View style={styles.ProfilePicContainer}>
-          <Image
-            style={styles.ProfilePic}
-            source={{ uri: currentUser?.profilePic }}
-          />
+          {
+            currentUser &&
+            <Image
+              style={styles.ProfilePic}
+              source={{ uri: currentUser?.profilePic }}
+            />
+          }
         </View>
         <View style={styles.ProfileInfoContainer}>
           <Text style={styles.ProfileName}>{currentUser?.name}</Text>
@@ -95,6 +98,7 @@ const UserProfile = () => {
           <Text style={styles.MobileNumber}>Mobile:
             <Text style={styles.MobileNumberValue}>{currentUser?.mobile}</Text>
           </Text>
+
           <Text style={styles.LastSignInTime}>Last Signin Time:
             <Text style={styles.LastSignInTimeValue}>{additionaldetails?.metadata?.lastSignInTime}</Text>
           </Text>

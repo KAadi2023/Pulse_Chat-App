@@ -1,5 +1,6 @@
 import {
   Image,
+  Modal,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -19,6 +20,7 @@ const ChatScreen = ({ route }) => {
   const navigation = useNavigation();
   const { data, id } = route.params;
   const [senderPic, setSenderPic] = useState('')
+  const [isVisible, setIsVisible] = useState(false);
 
   console.log("chat data:", data)
   console.log("sendersPic:", senderPic)
@@ -90,16 +92,19 @@ const ChatScreen = ({ route }) => {
             />
           </TouchableOpacity>
           <View style={styles.userDetails}>
-            <Image style={styles.profilePic} source={{
-              uri: data?.profilePic,
-            }} />
-            <Text style={styles.headerText}>{data.name}</Text>
+            <TouchableOpacity
+              onPress={() => setIsVisible(true)}
+              style={{ flexDirection: 'row' }}
+            >
+              <Image style={styles.profilePic} source={{
+                uri: data?.profilePic,
+              }} />
+              <Text style={styles.headerText}>{data.name}</Text>
+            </TouchableOpacity>
           </View>
         </View>
         <View style={styles.RightHeaderContainer}>
-          <TouchableOpacity
-          // onPress={() => navigation.navigate("CallPage", { data: data, id: id })}
-          >
+          <TouchableOpacity>
             <Image
               source={require('../image/call.png')}
               style={styles.CallIcon}
@@ -127,6 +132,32 @@ const ChatScreen = ({ route }) => {
           }
         }}
       />
+      <Modal
+        visible={isVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setIsVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.popover}>
+            <Image style={styles.ModalImage} source={{
+              uri: data?.profilePic,
+            }} />
+            <View style={styles.ProfileInfoContainer}>
+              <Text style={styles.ProfileName}>{data?.name}</Text>
+              <Text style={styles.ProfileEmail}>Email:
+                <Text style={styles.ProfileEmailValue}> {data?.email}</Text>
+              </Text>
+              <Text style={styles.MobileNumber}>Mobile:
+                <Text style={styles.MobileNumberValue}>{data?.mobile}</Text>
+              </Text>
+            </View>
+            <TouchableOpacity onPress={() => setIsVisible(false)}>
+              <Text style={{fontSize: 16 }}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal> 
     </View>
   );
 };
@@ -216,5 +247,64 @@ const styles = StyleSheet.create({
   },
   sendContainer: {
     marginLeft: 10,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  popover: {
+    backgroundColor: '#ccfbf1', 
+    padding: 10,
+    borderRadius: 20,
+    alignItems: 'center',
+  },
+  ModalImage: {
+    width: 300,
+    height: 300,
+    borderRadius: 20,
+    alignSelf: 'center',
+    marginBottom: 20,
+  },
+  ProfileInfoContainer: {
+    width: '80%',
+    height: 'auto',
+    backgroundColor: '#d1d5db',
+    marginBottom: 10, 
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  ProfileName: {
+    fontSize: 25,
+    fontWeight: 'bold',
+    marginTop: 5,
+    alignSelf: 'center',
+  },
+  ProfileEmail: {
+    fontSize: 16,
+    fontWeight: 600,
+    marginLeft: 15,
+  },
+  MobileNumber: {
+    fontSize: 16,
+    fontWeight: 600,
+    marginLeft: 15,
+    marginBottom: 15,
+  },
+  ProfileEmailValue: {
+    fontSize: 15,
+    fontWeight: 'normal',
+  },
+  MobileNumberValue: {
+    fontSize: 15,
+    fontWeight: 'normal',
   },
 });

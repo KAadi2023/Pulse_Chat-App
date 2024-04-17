@@ -1,8 +1,9 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import UserProfile from '../components/UserProfile'
 
 const Setting = () => {
+  const [data, setData] = useState({});
   return (
     <View style={styles.Container}>
       <UserProfile />

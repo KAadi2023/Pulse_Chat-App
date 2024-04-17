@@ -1,5 +1,5 @@
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import Users from '../tabs/Users';
 import Setting from '../tabs/Setting';
@@ -7,6 +7,7 @@ import Setting from '../tabs/Setting';
 const Home = () => {
   const [selectedTab, setSelectedTab] = useState(0);
   const navigation = useNavigation();
+  
   return (
     <View style={styles.container}>
       {selectedTab === 0 ? <Users /> : <Setting />}
