@@ -14,6 +14,25 @@ import { GiftedChat, Send } from 'react-native-gifted-chat';
 import firestore from '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-community/async-storage';
 import auth from '@react-native-firebase/auth';
+import messaging from '@react-native-firebase/messaging';
+import PushNotification from 'react-native-push-notification';
+
+// // Function to create a notification channel
+// const createNotificationChannel = () => {
+//   PushNotification.createChannel(
+//     {
+//       channelId: "my-channel-id", // Unique channel ID
+//       channelName: "My Channel", // Name of the channel
+//       channelDescription: "A channel for chat notifications", // Description of the channel
+//       importance: 4, // Importance level of the notifications (0 - 4, with 4 being the highest)
+//       vibrate: true, // Whether to vibrate the device for notifications on this channel
+//     },
+//     created => console.log(`PushNotification channel created: ${created}`)
+//   );
+// };
+
+// // Call the function to create the notification channel during app initialization
+// createNotificationChannel();
 
 const ChatScreen = ({ route }) => {
   const [messages, setMessages] = React.useState([]);
@@ -22,11 +41,12 @@ const ChatScreen = ({ route }) => {
   const [senderPic, setSenderPic] = useState('')
   const [isVisible, setIsVisible] = useState(false);
 
-  console.log("chat data:", data)
-  console.log("sendersPic:", senderPic)
+  // console.log("chat data:", data)
+  // console.log("sendersPic:", senderPic)
 
   useEffect(() => {
     getCurrentUsers();
+    subscribeToMessages();
   }, []);
 
 
@@ -35,7 +55,7 @@ const ChatScreen = ({ route }) => {
     setSenderPic(currentUser.photoURL)
   };
 
-  useEffect(() => {
+  const subscribeToMessages = () => {
     const subscriber = firestore()
       .collection('Chats')
       .doc(id + data.userId)
@@ -53,9 +73,10 @@ const ChatScreen = ({ route }) => {
     });
 
     return () => subscriber();
-  }, []);
+  };
 
-  const onSend = useCallback((messages = []) => {
+
+  const onSend = useCallback(async (messages = []) => {
     const msg = messages[0];
     const mymsg = {
       ...msg,
@@ -65,17 +86,42 @@ const ChatScreen = ({ route }) => {
     };
     setMessages(previousMessages => GiftedChat.append(previousMessages, mymsg));
 
-    firestore()
-      .collection('Chats')
-      .doc('' + id + data.userId)
-      .collection('messages')
-      .add(mymsg);
+    try {
+      await firestore()
+        .collection('Chats')
+        .doc('' + id + data.userId)
+        .collection('messages')
+        .add(mymsg);
 
-    firestore()
-      .collection('Chats')
-      .doc('' + data.userId + id)
-      .collection('messages')
-      .add(mymsg);
+      await firestore()
+        .collection('Chats')
+        .doc('' + data.userId + id)
+        .collection('messages')
+        .add(mymsg);
+
+      // Send notification to recipient with typed message in title
+      // const recipientSnapshot = await firestore().collection('Users').doc(data.userId).get();
+      const recipientToken = data.deviceToken;
+      console.log("recipientToken: ", recipientToken)
+
+      PushNotification.localNotification({
+        channelId: "my-channel-id",
+        title: msg.text, // Use the typed message as the title
+        message: `You have received a new message from ${auth().currentUser.displayName}`,
+      });
+
+      const payload = {
+        data: {
+          title: msg.text, // Use the typed message as the title
+          body: `You have received a new message from ${auth().currentUser.displayName}`,
+        },
+        token: recipientToken,
+      };
+
+      await messaging().sendMessage(payload);
+    } catch (error) {
+      console.error('Error sending message:', error);
+    }
   }, []);
 
 

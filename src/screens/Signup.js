@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import {ActivityIndicator, Alert, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Alert, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
 import uuid from 'react-native-uuid';
 import auth from '@react-native-firebase/auth';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { Cloudinary } from 'cloudinary-react-native';
+import messaging from '@react-native-firebase/messaging';
 
 const Signup = () => {
   const navigation = useNavigation();
@@ -93,6 +94,10 @@ const Signup = () => {
     setLoading(true);
     try {
       const { name, email, password, mobile } = payload;
+
+      // Obtain the device token using Firebase Cloud Messaging (FCM)
+      const deviceToken = await messaging().getToken();
+
       const userCredential = await auth().createUserWithEmailAndPassword(email, password);
 
       // Set display name for the user
@@ -110,7 +115,8 @@ const Signup = () => {
         mobile: mobile,
         password: password,
         userId: userId,
-        profilePic: profilePic
+        profilePic: profilePic,
+        deviceToken: deviceToken
       });
 
       // If user creation is successful, navigate to the login screen
