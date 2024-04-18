@@ -103,7 +103,7 @@ const Users = () => {
         data={users}
         renderItem={({ item, index }) => {
           return (
-            <View style={styles.userItem}>
+            <View style={styles.userItem} key={index}>
               <UserItem data={item} id={id} />
             </View>
           );

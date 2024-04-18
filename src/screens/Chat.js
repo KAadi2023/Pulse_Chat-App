@@ -17,23 +17,6 @@ import auth from '@react-native-firebase/auth';
 import messaging from '@react-native-firebase/messaging';
 import PushNotification from 'react-native-push-notification';
 
-// // Function to create a notification channel
-// const createNotificationChannel = () => {
-//   PushNotification.createChannel(
-//     {
-//       channelId: "my-channel-id", // Unique channel ID
-//       channelName: "My Channel", // Name of the channel
-//       channelDescription: "A channel for chat notifications", // Description of the channel
-//       importance: 4, // Importance level of the notifications (0 - 4, with 4 being the highest)
-//       vibrate: true, // Whether to vibrate the device for notifications on this channel
-//     },
-//     created => console.log(`PushNotification channel created: ${created}`)
-//   );
-// };
-
-// // Call the function to create the notification channel during app initialization
-// createNotificationChannel();
-
 const ChatScreen = ({ route }) => {
   const [messages, setMessages] = React.useState([]);
   const navigation = useNavigation();
@@ -99,8 +82,6 @@ const ChatScreen = ({ route }) => {
         .collection('messages')
         .add(mymsg);
 
-      // Send notification to recipient with typed message in title
-      // const recipientSnapshot = await firestore().collection('Users').doc(data.userId).get();
       const recipientToken = data.deviceToken;
       console.log("recipientToken: ", recipientToken)
 
