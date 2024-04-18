@@ -20,12 +20,12 @@ import PushNotification from 'react-native-push-notification';
 const ChatScreen = ({ route }) => {
   const [messages, setMessages] = React.useState([]);
   const navigation = useNavigation();
-  const { data, id } = route.params;
+  const { data, id, getUsers } = route.params;
   const [senderPic, setSenderPic] = useState('')
   const [isVisible, setIsVisible] = useState(false);
 
-  // console.log("chat data:", data)
   // console.log("sendersPic:", senderPic)
+  // console.log("messages:", messages)
 
   useEffect(() => {
     getCurrentUsers();
@@ -83,7 +83,7 @@ const ChatScreen = ({ route }) => {
         .add(mymsg);
 
       const recipientToken = data.deviceToken;
-      console.log("recipientToken: ", recipientToken)
+      // console.log("recipientToken: ", recipientToken)
 
       PushNotification.localNotification({
         channelId: "my-channel-id",
@@ -100,6 +100,8 @@ const ChatScreen = ({ route }) => {
       };
 
       await messaging().sendMessage(payload);
+
+      getUsers();
     } catch (error) {
       console.error('Error sending message:', error);
     }

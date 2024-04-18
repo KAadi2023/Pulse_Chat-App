@@ -3,7 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
 
-const UserItem = ({ data, id }) => {
+const UserItem = ({ data, id, getUsers}) => {
+
   const navigation = useNavigation();
   const [message, setMessages] = useState([]);
   const [isVisible, setIsVisible] = useState(false);
@@ -40,15 +41,15 @@ const UserItem = ({ data, id }) => {
   }
 
 
-  const latestMessageText = message.length > 0 ? message[0].text : '';
-  const latestMessageTime = message.length > 0 ? formatTimestamp(message[0].createdAt) : '';
+  const latestMessageText = data?.lastMessage?.text;
+  const latestMessageTime = formatTimestamp(data?.latestMessageTime);
 
   // console.log("users data:", data)
 
   return (
     <TouchableOpacity
       style={styles.container}
-      onPress={() => navigation.navigate('ChatScreen', { data: data, id: id })}
+      onPress={() => navigation.navigate('ChatScreen', { data: data, id: id, getUsers: getUsers})}
     >
       <View style={styles.content}>
         <View style={styles.userInfo}>

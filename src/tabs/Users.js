@@ -17,34 +17,54 @@ const Users = () => {
     getUsers();
   }, []);
 
-  // console.log('users', users);
-
   const getUsers = async () => {
     setLoading(true);
     try {
       id = await AsyncStorage.getItem('userId');
-      let tempData = [];
       const email = await AsyncStorage.getItem('email');
       console.log("id and email", id, email);
-      firestore()
-        .collection('users')
-        .where('email', '!=', email)
-        .get()
-        .then(res => {
-          if (res.docs != []) {
-            res.docs.forEach(doc => {
-              tempData.push(doc.data());
-            });
-            // console.log("TempData", tempData)
-            setUsers(tempData);
-            setLoading(false);
-          }
-        });
+      const usersRef = firestore().collection('users');
+      const tempData = [];
+  
+      const usersSnapshot = await usersRef.where('email', '!=', email).get();
+  
+      for (const doc of usersSnapshot.docs) {
+        const userData = doc.data();
+        const chatId = id + userData.userId;
+  
+        const latestMessageSnapshot = await firestore()
+          .collection('Chats')
+          .doc(chatId)
+          .collection('messages')
+          .orderBy('createdAt', 'desc')
+          .limit(1)
+          .get();
+  
+        let latestMessage = null;
+        if (!latestMessageSnapshot.empty) {
+          latestMessage = latestMessageSnapshot.docs[0].data();
+          userData.latestMessageTime = latestMessage.createdAt;
+        } else {
+          userData.latestMessageTime = 0;
+        }
+  
+        // Attach the last message to user data
+        userData.lastMessage = latestMessage;
+  
+        tempData.push(userData);
+      }
+  
+      // Sort users based on the latest message time
+      tempData.sort((a, b) => b.latestMessageTime - a.latestMessageTime);
+  
+      setUsers(tempData);
+      setLoading(false);
     } catch (error) {
       console.log(error);
       setLoading(false);
     }
   };
+  
 
   const handleLogout = async () => {
     // setLoading(true);
@@ -104,7 +124,7 @@ const Users = () => {
         renderItem={({ item, index }) => {
           return (
             <View style={styles.userItem} key={index}>
-              <UserItem data={item} id={id} />
+              <UserItem data={item} id={id} getUsers={getUsers} />
             </View>
           );
         }}
