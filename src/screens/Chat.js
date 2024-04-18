@@ -16,6 +16,11 @@ import AsyncStorage from '@react-native-community/async-storage';
 import auth from '@react-native-firebase/auth';
 import messaging from '@react-native-firebase/messaging';
 import PushNotification from 'react-native-push-notification';
+import { Dimensions } from 'react-native';
+
+// Get the dimensions of the screen
+const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
 
 const ChatScreen = ({ route }) => {
   const [messages, setMessages] = React.useState([]);
@@ -289,20 +294,19 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   popover: {
-    backgroundColor: '#ccfbf1',
-    padding: 10,
-    borderRadius: 20,
+    // backgroundColor: '#99f6e4',
     alignItems: 'center',
   },
   ModalImage: {
-    width: 300,
-    height: 300,
-    borderRadius: 20,
+    width: screenWidth * 0.9,
+    height: screenHeight * 0.5,
     alignSelf: 'center',
-    marginBottom: 20,
+    marginBottom: 5,
+    objectFit: 'fill',
+    borderRadius: 15,
   },
   ProfileInfoContainer: {
-    width: '80%',
+    width: screenWidth * 0.9,
     height: 'auto',
     backgroundColor: '#d1d5db',
     marginBottom: 10,

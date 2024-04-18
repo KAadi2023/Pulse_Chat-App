@@ -2,6 +2,11 @@ import { Image, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-na
 import React, { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
+import { Dimensions } from 'react-native';
+
+// Get the dimensions of the screen
+const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
 
 const UserItem = ({ data, id, getUsers}) => {
 
@@ -136,17 +141,16 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   popover: {
-    backgroundColor: '#99f6e4',
-    padding: 10,
-    borderRadius: 20,
+    // backgroundColor: '#99f6e4',
     alignItems: 'center',
   },
   ModalImage: {
-    width: 300,
-    height: 300,
-    borderRadius: 20,
+    width: screenWidth * 0.9,
+    height: screenHeight * 0.5,
     alignSelf: 'center',
     marginBottom: 20,
+    objectFit: 'fill',
+    borderRadius: 15,
   },
   button: {
     borderRadius: 20,
