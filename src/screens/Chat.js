@@ -164,20 +164,23 @@ const ChatScreen = ({ route }) => {
           </TouchableOpacity>
         </View>
       </View>
-      <GiftedChat
-        messages={messages}
-        onSend={messages => onSend(messages)}
-        user={{
-          _id: id,
-          avatar: senderPic ? senderPic : require('../image/user.png'),
-        }}
-        textInputProps={{
-          style: {
-            color: 'black',
-            flex: 1,
-          }
-        }}
-      />
+      <View style={styles.GiftedChatContainer}>
+        <GiftedChat
+          messages={messages}
+          onSend={messages => onSend(messages)}
+          user={{
+            _id: id,
+            avatar: senderPic ? senderPic : require('../image/user.png'),
+          }}
+          textInputProps={{
+            style: {
+              color: 'black',
+              flex: 1,
+              height: 50,
+            }
+          }}
+        />
+      </View>
       <Modal
         visible={isVisible}
         transparent={true}
@@ -362,5 +365,9 @@ const styles = StyleSheet.create({
   },
   buttonClose: {
     backgroundColor: '#2196F3',
+  },
+  GiftedChatContainer: {
+    width: '100%',
+    height: '91%',
   },
 });
