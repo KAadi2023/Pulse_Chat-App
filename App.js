@@ -3,6 +3,7 @@ import { Text, View } from 'react-native';
 import AppNavigator from './src/navigation/AppNavigator';
 import firebase from '@react-native-firebase/app';
 import messaging from '@react-native-firebase/messaging';
+import PushNotification from'react-native-push-notification';
 
 const firebaseConfig = {
   apiKey: "AIzaSyAZu7jX0KSHyZoYlIMFTCVnjjpUytzg4iw",
@@ -37,17 +38,18 @@ const App = () => {
     if (!firebase.apps.length) {
       // Replace firebaseConfig with your Firebase project configuration
       firebase.initializeApp(firebaseConfig);
-
-       // Create notification channel
-       createNotificationChannel();
-
-      // Initialize Firebase Messaging
-      const initFirebaseMessaging = async () => {
-        await messaging().registerDeviceForRemoteMessages(); // Required for some versions
-      };
-      initFirebaseMessaging();
     }
   }, []);
+
+  // Create notification channel
+  createNotificationChannel();
+
+  // Initialize Firebase Messaging
+  const initFirebaseMessaging = async () => {
+    await messaging().registerDeviceForRemoteMessages(); // Required for some versions
+  };
+  initFirebaseMessaging();
+  
 
   return <AppNavigator />;
 };
