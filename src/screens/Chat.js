@@ -17,6 +17,7 @@ import auth from '@react-native-firebase/auth';
 import messaging from '@react-native-firebase/messaging';
 import PushNotification from 'react-native-push-notification';
 import { Dimensions } from 'react-native';
+import LocalNotification from '../../LocalNotification';
 
 // Get the dimensions of the screen
 const screenWidth = Dimensions.get('window').width;
@@ -89,12 +90,15 @@ const ChatScreen = ({ route }) => {
 
       const recipientToken = data.deviceToken;
       // console.log("recipientToken: ", recipientToken)
+      const key = Date.now().toString();
 
       PushNotification.localNotification({
-        channelId: "my-channel-id",
+        channelId: key,
         title: msg.text, // Use the typed message as the title
         message: `You have received a new message from ${auth().currentUser.displayName}`,
       });
+
+      LocalNotification();
 
       const payload = {
         data: {

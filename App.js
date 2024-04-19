@@ -3,7 +3,8 @@ import { Text, View } from 'react-native';
 import AppNavigator from './src/navigation/AppNavigator';
 import firebase from '@react-native-firebase/app';
 import messaging from '@react-native-firebase/messaging';
-import PushNotification from'react-native-push-notification';
+import PushNotification from 'react-native-push-notification';
+import RemoteNotification from './RemoteNotification';
 
 const firebaseConfig = {
   apiKey: "AIzaSyAZu7jX0KSHyZoYlIMFTCVnjjpUytzg4iw",
@@ -18,9 +19,10 @@ const firebaseConfig = {
 
 // Function to create a notification channel
 const createNotificationChannel = () => {
+  const key = Date.now().toString();
   PushNotification.createChannel(
     {
-      channelId: "my-channel-id", // Unique channel ID
+      channelId: key, // Unique channel ID
       channelName: "My Channel", // Name of the channel
       channelDescription: "A channel for chat notifications", // Description of the channel
       importance: 4, // Importance level of the notifications (0 - 4, with 4 being the highest)
@@ -42,16 +44,20 @@ const App = () => {
   }, []);
 
   // Create notification channel
-  createNotificationChannel();
+  // createNotificationChannel();
 
   // Initialize Firebase Messaging
   const initFirebaseMessaging = async () => {
     await messaging().registerDeviceForRemoteMessages(); // Required for some versions
   };
   initFirebaseMessaging();
-  
 
-  return <AppNavigator />;
+
+  return (<>
+    <AppNavigator />
+    <RemoteNotification />
+  </>
+  );
 };
 
 export default App;
