@@ -12,12 +12,8 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { GiftedChat, Send } from 'react-native-gifted-chat';
 import firestore from '@react-native-firebase/firestore';
-import AsyncStorage from '@react-native-community/async-storage';
 import auth from '@react-native-firebase/auth';
-import messaging from '@react-native-firebase/messaging';
-import PushNotification from 'react-native-push-notification';
 import { Dimensions } from 'react-native';
-import LocalNotification from '../../LocalNotification';
 
 // Get the dimensions of the screen
 const screenWidth = Dimensions.get('window').width;
@@ -73,6 +69,7 @@ const ChatScreen = ({ route }) => {
       sendTo: data.userId,
       createdAt: Date.parse(msg.createdAt),
     };
+
     setMessages(previousMessages => GiftedChat.append(previousMessages, mymsg));
 
     try {
@@ -89,26 +86,44 @@ const ChatScreen = ({ route }) => {
         .add(mymsg);
 
       const recipientToken = data.deviceToken;
-      // console.log("recipientToken: ", recipientToken)
+      console.log("recipientToken: ", recipientToken)
       const key = Date.now().toString();
 
-      PushNotification.localNotification({
-        channelId: key,
-        title: msg.text, // Use the typed message as the title
-        message: `You have received a new message from ${auth().currentUser.displayName}`,
+      const legacyServerKey = 'AAAAYPaoGn0:APA91bEBU55wcsEwxepsdfQUw9a6JxliuN1H1J8IFnWboxzbegF8Sa7IFEtM0WA6t1N2TnPLzaKkrdYEpGVQzPUAqL5Favz9D5t5cxZYC5Iov5dVoKUT50QzicrMmD15uzmwtZLmDYBw';
+
+      const endpoint = 'https://fcm.googleapis.com/fcm/send';
+      const headers = new Headers({
+        'Authorization': 'key=' + legacyServerKey,
+        'Content-Type': 'application/json'
       });
 
-      LocalNotification();
-
-      const payload = {
-        data: {
-          title: msg.text, // Use the typed message as the title
-          body: `You have received a new message from ${auth().currentUser.displayName}`,
-        },
-        token: recipientToken,
+      const messagePayload = {
+        to: recipientToken,
+        notification: {
+          title: msg.text,
+          body: `you have a new message from ${auth().currentUser.displayName} `
+        }
       };
 
-      await messaging().sendMessage(payload);
+      const requestOptions = {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify(messagePayload)
+      };
+
+      fetch(endpoint, requestOptions)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Failed to send message: ' + response.status);
+          }
+          return response.json();
+        })
+        .then(data => {
+          console.log('Message sent successfully:', data);
+        })
+        .catch(error => {
+          console.error('Error sending message:', error);
+        });
 
       getUsers();
     } catch (error) {
@@ -123,7 +138,10 @@ const ChatScreen = ({ route }) => {
         <View style={styles.LeftHeaderContainer}>
           <TouchableOpacity
             style={styles.backBtn}
-            onPress={() => navigation.goBack()}>
+            onPress={() => {
+              navigation.goBack()
+              getUsers()
+            }}>
             <Image
               source={require('../image/previous.png')}
               style={styles.backBtn}
@@ -156,23 +174,33 @@ const ChatScreen = ({ route }) => {
           </TouchableOpacity>
         </View>
       </View>
-      <View style={styles.GiftedChatContainer}>
-        <GiftedChat
-          messages={messages}
-          onSend={messages => onSend(messages)}
-          user={{
-            _id: id,
-            avatar: senderPic ? senderPic : require('../image/user.png'),
-          }}
-          textInputProps={{
-            style: {
-              color: 'black',
-              flex: 1,
-              height: 50,
-            }
-          }}
-        />
-      </View>
+      {/* <View style={styles.GiftedChatContainer}> */}
+      <GiftedChat
+        messages={messages}
+        onSend={messages => onSend(messages)}
+        user={{
+          _id: id,
+          avatar: senderPic ? senderPic : require('../image/user.png'),
+        }}
+        textInputProps={{
+          style: {
+            color: 'black',
+            flex: 1,
+            height: 50,
+            paddingLeft: 10,
+            paddingRight: 10,
+            fontSize: 16,
+            fontFamily: 'Poppins-Regular',
+            backgroundColor: 'white',
+            borderRadius: 10,
+            borderWidth: 1,
+            borderColor: 'black',
+          },
+
+        }}
+
+      />
+      {/* </View> */}
       <Modal
         visible={isVisible}
         transparent={true}
@@ -360,5 +388,6 @@ const styles = StyleSheet.create({
   GiftedChatContainer: {
     width: '100%',
     height: '91%',
+    backgroundColor: 'yellow'
   },
 });

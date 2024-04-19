@@ -62,7 +62,7 @@ const UserItem = ({ data, id, getUsers}) => {
             onPress={() => setIsVisible(true)}
           >
             <Image style={styles.image} source={{
-              uri: data?.profilePic,
+              uri: data?.profilePic ? data?.profilePic : 'https://res.cloudinary.com/reactcloudinary/image/upload/v1713248818/osdtiuq5ep43wdt5of5n.jpg',
             }} />
           </TouchableOpacity>
           <View>

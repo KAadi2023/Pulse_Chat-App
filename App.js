@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { Text, View } from 'react-native';
 import AppNavigator from './src/navigation/AppNavigator';
 import firebase from '@react-native-firebase/app';
 import messaging from '@react-native-firebase/messaging';
@@ -17,34 +16,15 @@ const firebaseConfig = {
   // measurementId: "G-XXXXXXXXXX"
 };
 
-// Function to create a notification channel
-const createNotificationChannel = () => {
-  const key = Date.now().toString();
-  PushNotification.createChannel(
-    {
-      channelId: key, // Unique channel ID
-      channelName: "My Channel", // Name of the channel
-      channelDescription: "A channel for chat notifications", // Description of the channel
-      importance: 4, // Importance level of the notifications (0 - 4, with 4 being the highest)
-      vibrate: true, // Whether to vibrate the device for notifications on this channel
-    },
-    created => console.log(`PushNotification channel created: ${created}`)
-  );
-};
-
-
 const App = () => {
   // Initialize Firebase when the app starts
   useEffect(() => {
     // Check if Firebase is already initialized to avoid reinitialization
-    if (!firebase.apps.length) {
+    if (firebase.apps.length) {
       // Replace firebaseConfig with your Firebase project configuration
       firebase.initializeApp(firebaseConfig);
     }
   }, []);
-
-  // Create notification channel
-  // createNotificationChannel();
 
   // Initialize Firebase Messaging
   const initFirebaseMessaging = async () => {
