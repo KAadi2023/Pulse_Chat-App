@@ -6,12 +6,14 @@ import Signup from '../screens/Signup';
 import Login from '../screens/Login';
 import Home from '../screens/Home';
 import ChatScreen from '../screens/Chat';
+// import { ZegoCallInvitationDialog, ZegoUIKitPrebuiltCallWaitingScreen, ZegoUIKitPrebuiltCallInCallScreen } from '@zegocloud/zego-uikit-prebuilt-call-rn';
 
 const Stack = createNativeStackNavigator();
 
 const AppNavigator = () => {
   return (
     <NavigationContainer>
+      {/* <ZegoCallInvitationDialog /> */}
       <Stack.Navigator initialRouteName="Splash">
         <Stack.Screen
           name="Splash"
@@ -48,6 +50,18 @@ const AppNavigator = () => {
             headerShown: false,
           }}
         />
+        {/* <Stack.Screen
+          options={{ headerShown: false }}
+          // DO NOT change the name 
+          name="ZegoUIKitPrebuiltCallWaitingScreen"
+          component={ZegoUIKitPrebuiltCallWaitingScreen}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          // DO NOT change the name
+          name="ZegoUIKitPrebuiltCallInCallScreen"
+          component={ZegoUIKitPrebuiltCallInCallScreen}
+        /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );
