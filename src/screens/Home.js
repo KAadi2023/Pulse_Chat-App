@@ -44,9 +44,9 @@ const styles = StyleSheet.create({
   },
   bottomTabs: {
     position: 'absolute',
-    backgroundColor: '#2563eb',
+    backgroundColor: '#22d3ee',
     width: '100%',
-    height: 70,
+    height: 60,
     bottom: 0,
     flexDirection: 'row',
     justifyContent: 'space-evenly',

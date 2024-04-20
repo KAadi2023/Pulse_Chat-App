@@ -105,7 +105,7 @@ const Users = () => {
           alignItems: 'center',
         }}>
           <Image
-            source={require('../image/logo.png')}
+            source={require('../image/logo_1.png')}
             style={styles.logoImage}
           />
           <Text style={styles.headerText}>Pulse Chat</Text>
@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    backgroundColor: '#22d3ee',
     elevation: 5,
   },
   logoImage: {

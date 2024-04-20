@@ -277,7 +277,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 60,
     flexDirection: 'row',
-    backgroundColor: '#F5FCFF',
+    backgroundColor: '#22d3ee',
     elevation: 5,
   },
   LeftHeaderContainer: {
