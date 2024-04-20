@@ -1,5 +1,6 @@
 import {
   Image,
+  ImageBackground,
   Modal,
   SafeAreaView,
   StyleSheet,
@@ -10,7 +11,7 @@ import {
 } from 'react-native';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { GiftedChat, Send } from 'react-native-gifted-chat';
+import { Bubble, GiftedChat, InputToolbar, Send } from 'react-native-gifted-chat';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import { Dimensions } from 'react-native';
@@ -131,6 +132,46 @@ const ChatScreen = ({ route }) => {
     }
   }, []);
 
+  // Custom renderInputToolbar method for input area customization
+  const renderInputToolbar = (props) => {
+    // Customize your input toolbar UI here
+    return (
+      <InputToolbar
+        {...props}
+        containerStyle={styles.customInputToolbar}
+      />
+    );
+  };
+
+  // Custom renderSend method to customize the send button
+  const renderSend = (props) => {
+    // Customize your send button UI here
+    return (
+      <Send {...props}>
+        <View style={styles.customSendButton}>
+          <Text style={styles.sendButtonText}>Send</Text>
+        </View>
+      </Send>
+    );
+  };
+
+  // Custom renderBubble method to apply margin bottom to the message container
+  const renderBubble = (props) => {
+    return (
+      <Bubble
+        {...props}
+        wrapperStyle={{
+          left: {
+            marginBottom: 5,
+          }, // Add styles for messages on the left side
+          right: {
+            marginBottom: 5,
+          }, // Add styles for messages on the right side
+        }}
+      />
+    );
+  };
+
 
   return (
     <View style={styles.container}>
@@ -174,33 +215,24 @@ const ChatScreen = ({ route }) => {
           </TouchableOpacity>
         </View>
       </View>
-      {/* <View style={styles.GiftedChatContainer}> */}
-      <GiftedChat
-        messages={messages}
-        onSend={messages => onSend(messages)}
-        user={{
-          _id: id,
-          avatar: senderPic ? senderPic : require('../image/user.png'),
-        }}
-        textInputProps={{
-          style: {
-            color: 'black',
-            flex: 1,
-            height: 50,
-            paddingLeft: 10,
-            paddingRight: 10,
-            fontSize: 16,
-            fontFamily: 'Poppins-Regular',
-            backgroundColor: 'white',
-            borderRadius: 10,
-            borderWidth: 1,
-            borderColor: 'black',
-          },
-
-        }}
-
-      />
-      {/* </View> */}
+      <ImageBackground
+        source={require('../image/bg-img/bg-img-7.jpg')}
+        resizeMode="cover"
+        style={styles.backgroundImage}
+      >
+        <GiftedChat
+          messages={messages}
+          onSend={messages => onSend(messages)}
+          user={{
+            _id: id,
+            avatar: senderPic ? senderPic : require('../image/user.png'),
+          }}
+          renderInputToolbar={renderInputToolbar}
+          renderSend={renderSend}
+          renderBubble={renderBubble}
+        // messagesContainerStyle={{ ...styles.GiftedChatContainer }} Remove this line
+        />
+      </ImageBackground>
       <Modal
         visible={isVisible}
         transparent={true}
@@ -300,25 +332,6 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginRight: 20,
   },
-  inputToolbar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 10,
-    paddingBottom: 5,
-  },
-  textInput: {
-    flex: 1,
-    fontSize: 16,
-    lineHeight: 20,
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    borderWidth: 1,
-    borderRadius: 20,
-    borderColor: '#ccc',
-  },
-  sendContainer: {
-    marginLeft: 10,
-  },
   modalContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -385,9 +398,35 @@ const styles = StyleSheet.create({
   buttonClose: {
     backgroundColor: '#2196F3',
   },
-  GiftedChatContainer: {
+  customInputToolbar: {
+    backgroundColor: '#F5FCFF',
+    color: 'black',
+    borderRadius: 10,
+    elevation: 5,
+    paddingHorizontal: 10,
+    // paddingVertical: 5,
+    // marginBottom: 10,
+    // marginTop: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  customSendButton: {},
+  sendButtonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: 'blue',
+  },
+  backgroundImage: {
+    flex: 1,
     width: '100%',
-    height: '91%',
-    backgroundColor: 'yellow'
+    height: '100%',
   },
 });
