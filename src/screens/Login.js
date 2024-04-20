@@ -1,5 +1,6 @@
 import {
   Alert,
+  Image,
   StyleSheet,
   Text,
   TextInput,
@@ -60,29 +61,36 @@ const Login = () => {
 
   return (
     <View style={styles.Container}>
-      <Text style={styles.Title}>Sign in</Text>
-      <TextInput
-        style={[styles.TextInput, { marginTop: 50 }]}
-        id="email"
-        placeholder="Enter email"
-        placeholderTextColor={'black'}
-        onChangeText={value => handleInputChange(value, 'email')}
-      />
-      <TextInput
-        style={[styles.TextInput, { marginTop: 20 }]}
-        placeholder="Enter password"
-        placeholderTextColor={'black'}
-        id="password"
-        secureTextEntry={true}
-        onChangeText={value => handleInputChange(value, 'password')}
-      />
-      <TouchableOpacity style={styles.SignUpBtn} onPress={() => loginUser()}>
-        <Text style={styles.BtnText}>Sign In</Text>
-      </TouchableOpacity>
-      <Text onPress={handleSignupClick} style={styles.LoginText}>
-        Or Sign up
-      </Text>
-      <Loader visible={visible} />
+      <View style={styles.CardContainer}>
+        <Image
+          source={require('../image/logo_1.png')}
+          style={styles.Logo}
+        />
+        <Text style={styles.Title}>Sign in</Text>
+        <Text style={styles.SubTitle}>(Please enter your credentials)</Text>
+        <TextInput
+          style={[styles.TextInput, { marginTop: 50 }]}
+          id="email"
+          placeholder="Enter email"
+          placeholderTextColor={'black'}
+          onChangeText={value => handleInputChange(value, 'email')}
+        />
+        <TextInput
+          style={[styles.TextInput, { marginTop: 20 }]}
+          placeholder="Enter password"
+          placeholderTextColor={'black'}
+          id="password"
+          secureTextEntry={true}
+          onChangeText={value => handleInputChange(value, 'password')}
+        />
+        <TouchableOpacity style={styles.SignUpBtn} onPress={() => loginUser()}>
+          <Text style={styles.BtnText}>Sign In</Text>
+        </TouchableOpacity>
+        <Text onPress={handleSignupClick} style={styles.LoginText}>
+          Or Sign up
+        </Text>
+        <Loader visible={visible} />
+      </View>
     </View>
   );
 };
@@ -94,11 +102,37 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#F5FCFF',
   },
+  CardContainer: {
+    width: '90%',
+    alignSelf: 'center',
+    backgroundColor: '#67e8f9',
+    borderRadius: 10,
+    padding: 10,
+    marginTop: 30,
+    marginBottom: 30,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  Logo: {
+    width: 100,
+    height: 100,
+    alignSelf: 'center',
+  },
   Title: {
     fontSize: 30,
     alignSelf: 'center',
-    marginTop: 100,
     fontWeight: '600',
+    color: 'black',
+  },
+  SubTitle: {
+    fontSize: 16,
+    alignSelf: 'center',
     color: 'black',
   },
   TextInput: {

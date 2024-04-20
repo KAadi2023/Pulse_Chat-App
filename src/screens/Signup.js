@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ActivityIndicator, Alert, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Alert, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
 import uuid from 'react-native-uuid';
@@ -145,68 +145,77 @@ const Signup = () => {
   }
 
   return (
-    <View style={styles.Container}>
-      <Text style={styles.Title}>Sign up</Text>
+    <ScrollView>
+      <View style={styles.Container}>
+        <View style={styles.CardContainer}>
+          <Image
+            source={require('../image/logo_1.png')}
+            style={styles.Logo}
+          />
+          <Text style={styles.Title}>Sign up</Text>
+          <Text style={styles.SubTitle}>(Please enter your details for signup process)</Text>
 
-      {/* Display selected image in circle */}
-      {profilePic && (
-        <View style={styles.profilePicContainer}>
-          <Image source={{ uri: profilePic }} style={styles.profilePic} />
+          {/* Display selected image in circle */}
+          {profilePic && (
+            <View style={styles.profilePicContainer}>
+              <Image source={{ uri: profilePic }} style={styles.profilePic} />
+            </View>
+          )}
+          {/* Image picker */}
+          <TouchableOpacity onPress={handleImagePicker} style={styles.profilePicBtn}>
+            <Text style={styles.profilePicText}>Select Profile Picture</Text>
+          </TouchableOpacity>
+
+          <TextInput
+            style={[styles.TextInput, { borderColor: borderColors.name }]}
+            placeholder="Enter name"
+            placeholderTextColor={'black'}
+            onChangeText={value => handleInputChange(value, 'name')}
+          />
+          <TextInput
+            style={[styles.TextInput, { borderColor: borderColors.email }]}
+            placeholder="Enter email"
+            placeholderTextColor={'black'}
+            onChangeText={value => handleInputChange(value, 'email')}
+          />
+          <TextInput
+            keyboardType={'number-pad'}
+            style={[styles.TextInput, { borderColor: borderColors.mobile }]}
+            placeholder="Enter mobile"
+            placeholderTextColor={'black'}
+            onChangeText={value => handleInputChange(value, 'mobile')}
+          />
+          <TextInput
+            style={[styles.TextInput, { borderColor: borderColors.password }]}
+            placeholder="Enter password"
+            placeholderTextColor={'black'}
+            secureTextEntry={true}
+            onChangeText={value => handleInputChange(value, 'password')}
+          />
+          <TextInput
+            style={[styles.TextInput, { borderColor: borderColors.confirmPassword }]}
+            placeholder="Enter confirm password"
+            placeholderTextColor={'black'}
+            secureTextEntry={true}
+            onChangeText={value => handleInputChange(value, 'confirmPassword')}
+          />
+          <TouchableOpacity
+            style={[styles.SignUpBtn, { backgroundColor: valid ? '#2563eb' : 'gray' }]}
+            onPress={() => {
+              if (valid) {
+                registerUser();
+              } else {
+                Alert.alert('Please Enter Correct Data!!');
+              }
+            }}>
+            <Text style={styles.BtnText}>Sign Up</Text>
+          </TouchableOpacity>
+          <Text onPress={handleLoginClick} style={styles.LoginText}>
+            Or Login
+          </Text>
         </View>
-      )}
-      {/* Image picker */}
-      <TouchableOpacity onPress={handleImagePicker} style={styles.profilePicBtn}>
-        <Text style={styles.profilePicText}>Select Profile Picture</Text>
-      </TouchableOpacity>
-
-      <TextInput
-        style={[styles.TextInput, { borderColor: borderColors.name }]}
-        placeholder="Enter name"
-        placeholderTextColor={'black'}
-        onChangeText={value => handleInputChange(value, 'name')}
-      />
-      <TextInput
-        style={[styles.TextInput, { borderColor: borderColors.email }]}
-        placeholder="Enter email"
-        placeholderTextColor={'black'}
-        onChangeText={value => handleInputChange(value, 'email')}
-      />
-      <TextInput
-        keyboardType={'number-pad'}
-        style={[styles.TextInput, { borderColor: borderColors.mobile }]}
-        placeholder="Enter mobile"
-        placeholderTextColor={'black'}
-        onChangeText={value => handleInputChange(value, 'mobile')}
-      />
-      <TextInput
-        style={[styles.TextInput, { borderColor: borderColors.password }]}
-        placeholder="Enter password"
-        placeholderTextColor={'black'}
-        secureTextEntry={true}
-        onChangeText={value => handleInputChange(value, 'password')}
-      />
-      <TextInput
-        style={[styles.TextInput, { borderColor: borderColors.confirmPassword }]}
-        placeholder="Enter confirm password"
-        placeholderTextColor={'black'}
-        secureTextEntry={true}
-        onChangeText={value => handleInputChange(value, 'confirmPassword')}
-      />
-      <TouchableOpacity
-        style={[styles.SignUpBtn, { backgroundColor: valid ? '#2563eb' : 'gray' }]}
-        onPress={() => {
-          if (valid) {
-            registerUser();
-          } else {
-            Alert.alert('Please Enter Correct Data!!');
-          }
-        }}>
-        <Text style={styles.BtnText}>Sign Up</Text>
-      </TouchableOpacity>
-      <Text onPress={handleLoginClick} style={styles.LoginText}>
-        Or Login
-      </Text>
-    </View>
+      </View>
+    </ScrollView>
   );
 };
 
@@ -217,11 +226,37 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#F5FCFF',
   },
+  CardContainer: {
+    width: '90%',
+    alignSelf: 'center',
+    backgroundColor: '#67e8f9',
+    borderRadius: 10,
+    padding: 10,
+    marginTop: 20,
+    marginBottom: 30,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  Logo: {
+    width: 100,
+    height: 100,
+    alignSelf: 'center',
+  },
   Title: {
     fontSize: 30,
     alignSelf: 'center',
-    marginTop: 40,
     fontWeight: '600',
+    color: 'black',
+  },
+  SubTitle: {
+    fontSize: 16,
+    alignSelf: 'center',
     color: 'black',
   },
   TextInput: {
