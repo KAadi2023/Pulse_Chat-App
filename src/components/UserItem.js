@@ -131,8 +131,10 @@ const styles = StyleSheet.create({
   latestMessageTime: {
     fontSize: 12,
     color: 'gray',
-    alignSelf: 'flex-start',
-    marginRight: 20 // Adjust alignment as needed
+    position: 'absolute',
+    right: 12, // Adjust as needed
+    top: '50%', // Position at the center vertically
+    transform: [{ translateY: -20 }] // Adjust based on font size to center vertically
   },
   modalContainer: {
     flex: 1,
